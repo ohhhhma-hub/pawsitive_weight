@@ -1,0 +1,116 @@
+/** pages/profile/profile.wxss **/
+.container {
+  padding: 40rpx;
+  background-color: var(--color-bg);
+}
+
+.header {
+  margin-bottom: 40rpx;
+  text-align: center;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--color-text-main);
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: var(--color-text-sub);
+}
+
+.form-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.form-item {
+  padding: 32rpx 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 32rpx;
+  color: var(--color-text-main);
+  font-weight: 500;
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+}
+
+.tip {
+  font-size: 20rpx;
+  color: var(--color-primary);
+  background: rgba(255, 159, 67, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 99rpx;
+  margin-left: 12rpx;
+}
+
+.input {
+  text-align: right;
+  font-size: 32rpx;
+  color: var(--color-text-main);
+  width: 200rpx;
+}
+
+.divider {
+  height: 2rpx;
+  background: var(--color-border);
+  margin: 0 40rpx;
+}
+
+.result-card {
+  margin-top: 20rpx;
+  background: #E8F8F5; /* Light Mint */
+  border: 2rpx solid var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+}
+
+.result-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.result-emoji {
+  font-size: 64rpx;
+  margin-right: 24rpx;
+}
+
+.result-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-title {
+  font-size: 26rpx;
+  color: var(--color-text-sub);
+}
+
+.result-value {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+.result-note {
+  font-size: 22rpx;
+  color: var(--color-text-sub);
+  opacity: 0.8;
+}
+
+.save-btn {
+  margin-top: 60rpx;
+  width: 100%;
+}

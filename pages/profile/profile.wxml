@@ -1,0 +1,45 @@
+<!-- pages/profile/profile.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">🐾 猫咪档案</text>
+    <text class="subtitle">建立档案，科学减肥</text>
+  </view>
+
+  <view class="form-card card">
+    <view class="form-item">
+      <text class="label">猫咪名字</text>
+      <input class="input" type="text" placeholder="例如：咪咪" value="{{name}}" bindinput="onNameInput" />
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="form-item">
+      <text class="label">当前体重 (kg)</text>
+      <input class="input" type="digit" placeholder="0.0" value="{{currentWeight}}" bindinput="onCurrentWeightInput" />
+    </view>
+
+    <view class="divider"></view>
+
+    <view class="form-item">
+      <view class="label-row">
+        <text class="label">理想体重 (kg)</text>
+        <text class="tip">ℹ️ 咨询医生</text>
+      </view>
+      <input class="input" type="digit" placeholder="0.0" value="{{idealWeight}}" bindinput="onIdealWeightInput" />
+    </view>
+  </view>
+
+  <!-- Calculation Result -->
+  <view class="result-card card" wx:if="{{dailyCalories > 0}}">
+    <view class="result-content">
+      <text class="result-emoji">🥗</text>
+      <view class="result-text">
+        <text class="result-title">每日推荐摄入</text>
+        <text class="result-value">{{dailyCalories}} kcal</text>
+      </view>
+    </view>
+    <text class="result-note">基于 RER 公式计算 (目标体重 x 30 + 70) x 0.8</text>
+  </view>
+
+  <button class="btn-primary save-btn" bindtap="saveProfile">生成减肥计划</button>
+</view>

@@ -1,9 +1,14 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/profile/profile"
   ],
   "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FFFBF0",
+    "navigationBarTitleText": "Pawsitive Weight",
     "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFFBF0",
     "navigationStyle": "custom"
   },
   "style": "v2",
