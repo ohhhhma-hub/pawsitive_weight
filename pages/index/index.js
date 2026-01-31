@@ -129,11 +129,15 @@ Page({
             const currentLog = this.data.logs.find(log => log.id === logId);
             const currentX = currentLog?.translateX || 0;
 
+            // Convert 160rpx to px (assuming 750rpx = screen width)
+            const systemInfo = wx.getWindowInfo();
+            const screenWidth = systemInfo.windowWidth;
+            const maxSwipePx = -(160 / 750 * screenWidth);
+
             let translateX;
             if (deltaX < 0) {
                 // Swipe left - show buttons
-                const maxSwipe = -160;
-                translateX = Math.max(deltaX, maxSwipe);
+                translateX = Math.max(deltaX, maxSwipePx);
             } else {
                 // Swipe right - close buttons
                 translateX = Math.min(currentX + deltaX, 0);
@@ -156,9 +160,14 @@ Page({
         const currentLog = this.data.logs.find(log => log.id === logId);
 
         if (currentLog && currentLog.translateX !== undefined) {
+            // Convert 160rpx to px
+            const systemInfo = wx.getWindowInfo();
+            const screenWidth = systemInfo.windowWidth;
+            const maxSwipePx = -(160 / 750 * screenWidth);
+
             // If swiped more than halfway, keep it open; otherwise close
-            const shouldStayOpen = currentLog.translateX < -80;
-            const finalX = shouldStayOpen ? -160 : 0;
+            const shouldStayOpen = currentLog.translateX < maxSwipePx / 2;
+            const finalX = shouldStayOpen ? maxSwipePx : 0;
 
             const logs = this.data.logs.map(log => {
                 if (log.id === logId) {
