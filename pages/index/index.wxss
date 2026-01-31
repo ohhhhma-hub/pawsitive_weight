@@ -115,14 +115,57 @@
   padding-left: 8rpx;
 }
 
+.log-item-wrapper {
+  position: relative;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  border-radius: 20rpx;
+}
+
+.action-buttons {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  height: 100%;
+}
+
+.action-btn {
+  width: 80rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.action-edit {
+  background: #4A90E2;
+}
+
+.action-delete {
+  background: #FF6B6B;
+}
+
+.action-icon {
+  font-size: 32rpx;
+  margin-bottom: 4rpx;
+}
+
+.action-text {
+  font-size: 20rpx;
+}
+
 .log-item {
   background: white;
   border-radius: 20rpx;
   padding: 24rpx 32rpx;
-  margin-bottom: 16rpx;
   display: flex;
   align-items: center;
   box-shadow: 0 4rpx 8rpx rgba(0,0,0,0.03);
+  position: relative;
+  z-index: 2;
 }
 
 .log-time {

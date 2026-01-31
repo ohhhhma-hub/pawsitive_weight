@@ -12,7 +12,14 @@ Page({
         showInputModal: false,
         currentFoodType: '', // 'dry', 'wet', 'treats'
         inputValue: '',
-        safeAreaTop: 0
+        safeAreaTop: 0,
+        // Touch tracking for swipe
+        touchStartX: 0,
+        touchStartY: 0,
+        currentSwipeId: null,
+        showEditModal: false,
+        editingLog: null,
+        editValue: ''
     },
 
     onLoad() {
@@ -100,6 +107,162 @@ Page({
 
     closeModal() {
         this.setData({ showInputModal: false });
+    },
+
+    // Swipe Gesture Handlers
+    onTouchStart(e) {
+        const touch = e.touches[0];
+        this.setData({
+            touchStartX: touch.clientX,
+            touchStartY: touch.clientY
+        });
+    },
+
+    onTouchMove(e) {
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - this.data.touchStartX;
+        const deltaY = touch.clientY - this.data.touchStartY;
+
+        // Only swipe if horizontal movement is dominant
+        if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+            const logId = e.currentTarget.dataset.id;
+            const maxSwipe = -160; // Maximum swipe distance
+            const translateX = Math.max(deltaX, maxSwipe);
+
+            // Update the specific log item's position
+            const logs = this.data.logs.map(log => {
+                if (log.id === logId) {
+                    return { ...log, translateX, transition: false };
+                }
+                return { ...log, translateX: 0, transition: true };
+            });
+
+            this.setData({ logs, currentSwipeId: logId });
+        }
+    },
+
+    onTouchEnd(e) {
+        const logId = e.currentTarget.dataset.id;
+        const currentLog = this.data.logs.find(log => log.id === logId);
+
+        if (currentLog && currentLog.translateX) {
+            // If swiped more than halfway, keep it open
+            const shouldStayOpen = currentLog.translateX < -80;
+            const finalX = shouldStayOpen ? -160 : 0;
+
+            const logs = this.data.logs.map(log => {
+                if (log.id === logId) {
+                    return { ...log, translateX: finalX, transition: true };
+                }
+                return log;
+            });
+
+            this.setData({ logs });
+        }
+    },
+
+    // Delete Log
+    onDeleteLog(e) {
+        const logId = e.currentTarget.dataset.id;
+
+        wx.showModal({
+            title: '确认删除',
+            content: '确定要删除这条记录吗？',
+            confirmText: '删除',
+            confirmColor: '#FF6B6B',
+            success: (res) => {
+                if (res.confirm) {
+                    const logToDelete = this.data.logs.find(log => log.id === logId);
+                    const newLogs = this.data.logs.filter(log => log.id !== logId);
+                    const newConsumed = this.data.consumed - logToDelete.cal;
+
+                    // Save to storage
+                    const todayStr = new Date().toDateString();
+                    const record = {
+                        consumed: newConsumed,
+                        logs: newLogs
+                    };
+                    wx.setStorageSync('pawsitive_daily_' + todayStr, record);
+
+                    // Update UI
+                    this.updateStats(newConsumed, newLogs);
+
+                    wx.showToast({
+                        title: '已删除',
+                        icon: 'success'
+                    });
+                }
+            }
+        });
+    },
+
+    // Edit Log
+    onEditLog(e) {
+        const logId = e.currentTarget.dataset.id;
+        const logToEdit = this.data.logs.find(log => log.id === logId);
+
+        // Reset swipe position
+        const logs = this.data.logs.map(log => ({
+            ...log,
+            translateX: 0,
+            transition: true
+        }));
+
+        this.setData({
+            logs,
+            showEditModal: true,
+            editingLog: logToEdit,
+            editValue: logToEdit.cal.toString()
+        });
+    },
+
+    onEditInputVal(e) {
+        this.setData({ editValue: e.detail.value });
+    },
+
+    closeEditModal() {
+        this.setData({ showEditModal: false, editingLog: null });
+    },
+
+    confirmEdit() {
+        const newCal = parseInt(this.data.editValue);
+        if (!newCal || newCal <= 0) {
+            wx.showToast({
+                title: '请输入有效的卡路里哦',
+                icon: 'none'
+            });
+            return;
+        }
+
+        const oldCal = this.data.editingLog.cal;
+        const calDiff = newCal - oldCal;
+
+        // Update log
+        const newLogs = this.data.logs.map(log => {
+            if (log.id === this.data.editingLog.id) {
+                return { ...log, cal: newCal };
+            }
+            return log;
+        });
+
+        const newConsumed = this.data.consumed + calDiff;
+
+        // Save to storage
+        const todayStr = new Date().toDateString();
+        const record = {
+            consumed: newConsumed,
+            logs: newLogs
+        };
+        wx.setStorageSync('pawsitive_daily_' + todayStr, record);
+
+        // Update UI
+        this.updateStats(newConsumed, newLogs);
+        this.closeEditModal();
+
+        wx.showToast({
+            title: '修改成功！',
+            icon: 'success'
+        });
     },
 
     confirmAdd() {

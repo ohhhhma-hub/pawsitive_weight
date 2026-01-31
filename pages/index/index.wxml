@@ -57,11 +57,30 @@
     <text class="section-title">今日记录</text>
     <view class="log-list">
       <block wx:if="{{logs.length > 0}}">
-        <view class="log-item" wx:for="{{logs}}" wx:key="id">
-          <text class="log-time">{{item.time}}</text>
-          <text class="log-icon">{{item.icon}}</text>
-          <text class="log-name">{{item.name}}</text>
-          <text class="log-cal">+{{item.cal}} kcal</text>
+        <view class="log-item-wrapper" wx:for="{{logs}}" wx:key="id">
+          <!-- Action Buttons (Hidden behind) -->
+          <view class="action-buttons">
+            <view class="action-btn action-edit" bindtap="onEditLog" data-id="{{item.id}}">
+              <text class="action-icon">✏️</text>
+              <text class="action-text">编辑</text>
+            </view>
+            <view class="action-btn action-delete" bindtap="onDeleteLog" data-id="{{item.id}}">
+              <text class="action-icon">🗑️</text>
+              <text class="action-text">删除</text>
+            </view>
+          </view>
+          <!-- Swipeable Log Item -->
+          <view class="log-item" 
+                bindtouchstart="onTouchStart" 
+                bindtouchmove="onTouchMove" 
+                bindtouchend="onTouchEnd"
+                data-id="{{item.id}}"
+                style="transform: translateX({{item.translateX || 0}}px); transition: {{item.transition ? 'transform 0.3s' : 'none'}};">
+            <text class="log-time">{{item.time}}</text>
+            <text class="log-icon">{{item.icon}}</text>
+            <text class="log-name">{{item.name}}</text>
+            <text class="log-cal">+{{item.cal}} kcal</text>
+          </view>
         </view>
       </block>
       <view class="empty-state" wx:else>
@@ -95,6 +114,18 @@
       <view class="modal-actions">
         <button class="btn-cancel" bindtap="closeModal">取消</button>
         <button class="btn-confirm" bindtap="confirmAdd">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- Edit Modal -->
+  <view class="modal-overlay" wx:if="{{showEditModal}}">
+    <view class="modal-card">
+      <text class="modal-title">修改卡路里 (kcal)</text>
+      <input class="modal-input" type="number" focus="{{showEditModal}}" bindinput="onEditInputVal" value="{{editValue}}" />
+      <view class="modal-actions">
+        <button class="btn-cancel" bindtap="closeEditModal">取消</button>
+        <button class="btn-confirm" bindtap="confirmEdit">确定</button>
       </view>
     </view>
   </view>
