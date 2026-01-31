@@ -5,10 +5,18 @@ Page({
     currentWeight: '',
     idealWeight: '',
     rer: 0,
-    dailyCalories: 0
+    dailyCalories: 0,
+    safeAreaTop: 0
   },
 
   onLoad(options) {
+    // Get safe area info to avoid Dynamic Island
+    const systemInfo = wx.getWindowInfo();
+    const safeAreaTop = systemInfo.safeArea?.top || 0;
+    this.setData({
+      safeAreaTop: safeAreaTop + 10 // Add extra padding
+    });
+
     // Load existing data if available
     const catProfile = wx.getStorageSync('catProfile');
     if (catProfile) {
