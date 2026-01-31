@@ -124,10 +124,20 @@ Page({
         const deltaY = touch.clientY - this.data.touchStartY;
 
         // Only swipe if horizontal movement is dominant
-        if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
             const logId = e.currentTarget.dataset.id;
-            const maxSwipe = -160; // Maximum swipe distance
-            const translateX = Math.max(deltaX, maxSwipe);
+            const currentLog = this.data.logs.find(log => log.id === logId);
+            const currentX = currentLog?.translateX || 0;
+
+            let translateX;
+            if (deltaX < 0) {
+                // Swipe left - show buttons
+                const maxSwipe = -160;
+                translateX = Math.max(deltaX, maxSwipe);
+            } else {
+                // Swipe right - close buttons
+                translateX = Math.min(currentX + deltaX, 0);
+            }
 
             // Update the specific log item's position
             const logs = this.data.logs.map(log => {
@@ -145,14 +155,32 @@ Page({
         const logId = e.currentTarget.dataset.id;
         const currentLog = this.data.logs.find(log => log.id === logId);
 
-        if (currentLog && currentLog.translateX) {
-            // If swiped more than halfway, keep it open
+        if (currentLog && currentLog.translateX !== undefined) {
+            // If swiped more than halfway, keep it open; otherwise close
             const shouldStayOpen = currentLog.translateX < -80;
             const finalX = shouldStayOpen ? -160 : 0;
 
             const logs = this.data.logs.map(log => {
                 if (log.id === logId) {
                     return { ...log, translateX: finalX, transition: true };
+                }
+                return log;
+            });
+
+            this.setData({ logs });
+        }
+    },
+
+    // Tap to close swipe
+    onLogItemTap(e) {
+        const logId = e.currentTarget.dataset.id;
+        const currentLog = this.data.logs.find(log => log.id === logId);
+
+        // If item is swiped open, close it on tap
+        if (currentLog && currentLog.translateX && currentLog.translateX !== 0) {
+            const logs = this.data.logs.map(log => {
+                if (log.id === logId) {
+                    return { ...log, translateX: 0, transition: true };
                 }
                 return log;
             });
