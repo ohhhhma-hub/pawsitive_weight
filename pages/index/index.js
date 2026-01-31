@@ -11,7 +11,17 @@ Page({
         logs: [],
         showInputModal: false,
         currentFoodType: '', // 'dry', 'wet', 'treats'
-        inputValue: ''
+        inputValue: '',
+        safeAreaTop: 0
+    },
+
+    onLoad() {
+        // Get safe area info to avoid Dynamic Island
+        const systemInfo = wx.getWindowInfo();
+        const safeAreaTop = systemInfo.safeArea?.top || 0;
+        this.setData({
+            safeAreaTop: safeAreaTop + 10 // Add extra padding
+        });
     },
 
     onShow() {
@@ -62,6 +72,15 @@ Page({
     goToProfile() {
         wx.navigateTo({
             url: '/pages/profile/profile',
+        });
+    },
+
+    showPlaceholder(e) {
+        const name = e.currentTarget.dataset.name;
+        wx.showToast({
+            title: `猫猫努力开发中 🔨`,
+            icon: 'none',
+            duration: 2000
         });
     },
 

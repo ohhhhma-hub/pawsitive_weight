@@ -1,5 +1,5 @@
 <!-- index.wxml -->
-<view class="container" style="padding-bottom: 200rpx;">
+<view class="container" style="padding-bottom: 200rpx; padding-top: {{safeAreaTop}}px;">
 
   <!-- Header -->
   <view class="header-card">
@@ -36,6 +36,22 @@
     </view>
   </view>
 
+  <!-- Feeding Action Bar (Moved to Middle) -->
+  <view class="feeding-actions">
+    <view class="action-btn" bindtap="onAddFood" data-type="dry">
+      <view class="btn-icon-circle bg-cream">🥣</view>
+      <text>干粮</text>
+    </view>
+    <view class="action-btn" bindtap="onAddFood" data-type="wet">
+      <view class="btn-icon-circle bg-mint">🐟</view>
+      <text>湿粮</text>
+    </view>
+    <view class="action-btn" bindtap="onAddFood" data-type="treats">
+      <view class="btn-icon-circle bg-orange">🍬</view>
+      <text>零食</text>
+    </view>
+  </view>
+
   <!-- Log List -->
   <view class="log-section">
     <text class="section-title">今日记录</text>
@@ -55,19 +71,19 @@
     </view>
   </view>
 
-  <!-- Bottom Action Sheet -->
-  <view class="action-dock">
-    <view class="action-btn" bindtap="onAddFood" data-type="dry">
-      <view class="btn-icon-circle bg-cream">🥣</view>
-      <text>干粮</text>
+  <!-- Bottom Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item active">
+      <text class="tab-icon">🏠</text>
+      <text class="tab-text">首页</text>
     </view>
-    <view class="action-btn" bindtap="onAddFood" data-type="wet">
-      <view class="btn-icon-circle bg-mint">🐟</view>
-      <text>湿粮</text>
+    <view class="tab-item" bindtap="showPlaceholder" data-name="社区">
+      <text class="tab-icon">👥</text>
+      <text class="tab-text">社区</text>
     </view>
-    <view class="action-btn" bindtap="onAddFood" data-type="treats">
-      <view class="btn-icon-circle bg-orange">🍬</view>
-      <text>零食</text>
+    <view class="tab-item" bindtap="showPlaceholder" data-name="我的">
+      <text class="tab-icon">👤</text>
+      <text class="tab-text">我的</text>
     </view>
   </view>
 
